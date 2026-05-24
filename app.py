@@ -622,7 +622,8 @@ st.markdown(
         </span>
         <br>
         <span style="color:#7a8a9a; font-size:0.85rem;">
-            جميع الحقوق محفوظة WMC Group LLC © 2026 —
+           WMC Group LLC | Abdulrahman Aljabry © 2026 جميع الحقوق محفوظة
+            <br>
             <a href="{WEBSITE_URL}" target="_blank" style="color:#00c9a7; text-decoration:none;">
                 www.aljabry.net
             </a>
