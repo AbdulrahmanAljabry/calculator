@@ -40,7 +40,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ─── Header ───────────────────────────────────────────────────────────────────
-LOGO_URL    = "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/b2OOrZRUx846Jls5FbKA/media/69d8c9a823917331fbb45717.png"
+LOGO_URL    = "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/b2OOrZRUx846Jls5FbKA/media/69e26d618696a78b8dad637c.png"
 WEBSITE_URL = "https://www.aljabry.net"
 
 st.markdown(
