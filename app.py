@@ -40,8 +40,25 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ─── Header ───────────────────────────────────────────────────────────────────
-st.title("📈 حاسبة المتداول الاحترافية")
-st.caption("أداة متكاملة لإدارة المخاطر · حساب حجم اللوت · خطة الربح التراكمي")
+LOGO_URL    = "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/b2OOrZRUx846Jls5FbKA/media/69d8c9a823917331fbb45717.png"
+WEBSITE_URL = "https://www.aljabry.net"
+
+st.markdown(
+    f"""
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:0.5rem;">
+        <a href="{WEBSITE_URL}" target="_blank">
+            <img src="{LOGO_URL}" style="height:70px; border-radius:8px;" />
+        </a>
+        <div>
+            <h2 style="margin:0; color:#ffffff;">حاسبة المتداول الاحترافية</h2>
+            <p style="margin:0; color:#aab4c4; font-size:0.9rem;">
+                أداة متكاملة لإدارة المخاطر · حساب حجم اللوت · خطة الربح التراكمي
+            </p>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 tab1, tab2, tab3 = st.tabs([
     "⚖️  إدارة المخاطر",
@@ -592,11 +609,28 @@ st.caption(
     "لا تستثمر أكثر مما تتحمل خسارته."
 )
 st.markdown(
-    """
-    <div style="text-align: center; padding: 1.5rem 0 0.5rem; color: #7a8a9a; font-size: 0.88rem; line-height: 1.8;">
-        تم برمجة هذه الصفحة من خلال <strong style="color: #00c9a7;">"عبد الرحمن الجابري"</strong> لأهداف تعليمية فقط
+    f"""
+    <div style="text-align:center; padding:1.5rem 0 0.5rem; line-height:2;">
+        <a href="{WEBSITE_URL}" target="_blank">
+            <img src="{LOGO_URL}" style="height:55px; border-radius:8px; margin-bottom:0.6rem;" />
+        </a>
         <br>
-        جميع الحقوق محفوظة WMC Group LLC © 2026 — لا يُسمح بإعادة النشر أو الاستخدام التجاري دون إذن مسبق
+        <span style="color:#7a8a9a; font-size:0.88rem;">
+            تم برمجة هذه الصفحة من خلال
+            <strong style="color:#00c9a7;">"عبد الرحمن الجابري"</strong>
+            لأهداف تعليمية فقط
+        </span>
+        <br>
+        <span style="color:#7a8a9a; font-size:0.85rem;">
+            جميع الحقوق محفوظة WMC Group LLC © 2026 —
+            <a href="{WEBSITE_URL}" target="_blank" style="color:#00c9a7; text-decoration:none;">
+                www.aljabry.net
+            </a>
+            &nbsp;|&nbsp;
+            <a href="mailto:abdulrahman@aljabry.net" style="color:#00c9a7; text-decoration:none;">
+                abdulrahman@aljabry.net
+            </a>
+        </span>
     </div>
     """,
     unsafe_allow_html=True,
