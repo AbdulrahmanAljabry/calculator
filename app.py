@@ -616,13 +616,13 @@ st.markdown(
         </a>
         <br>
         <span style="color:#7a8a9a; font-size:0.88rem;">
-            تم برمجة هذه الصفحة من خلال
+            تم برمجة هذه الحاسبة من خلال
             <strong style="color:#00c9a7;">"عبد الرحمن الجابري"</strong>
             لأهداف تعليمية فقط
         </span>
         <br>
         <span style="color:#7a8a9a; font-size:0.85rem;">
-            جميع الحقوق محفوظة WMC Group LLC © 2026
+            2026 © جميع الحقوق محفوظة WMC Group LLC 
              <br>
             <a href="{WEBSITE_URL}" target="_blank" style="color:#00c9a7; text-decoration:none;">
                 www.aljabry.net
