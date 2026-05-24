@@ -555,21 +555,20 @@ with tab3:
         full_data = []
         for d in range(0, trading_days + 1):
             cap        = capital_list[d]
-            pct        = ((cap - initial_capital) / initial_capital) * 100
+            cum_profit = cap - initial_capital
             daily_gain = daily_profits[d]
             prev_cap   = capital_list[d - 1] if d > 0 else cap
-
-            # الخسارة القصوى = ربح هذا اليوم فقط
-            # بمعنى: لا تخاطر بأكثر مما ستكسبه — أسوأ حالة تعود لرأس مال اليوم السابق
-            max_loss = daily_gain if d > 0 else 0.0
+            max_loss   = daily_gain if d > 0 else 0.0
+            per_trade  = daily_gain / daily_trades if daily_trades > 0 else 0.0
 
             full_data.append({
-                "اليوم":                        d,
-                "رأس المال ($)":                round(cap, 2),
-                "ربح اليوم المستهدف ($)":       round(daily_gain, 2),
-                "نسبة النمو التراكمي %":        round(pct, 2),
-                "الحد الأقصى للخسارة اليومية ($)": round(max_loss, 2),
-                "رأس المال عند ضرب الحد ($)":   round(prev_cap, 2),
+                "اليوم":                               d,
+                "رأس المال ($)":                       round(cap, 2),
+                "الربح اليومي ($)":                    round(daily_gain, 2),
+                "الربح التراكمي ($)":                  round(cum_profit, 2),
+                "الحد الأقصى للخسارة ($)":            round(max_loss, 2),
+                "رأس المال بعد الستوب ($)":            round(prev_cap, 2),
+                f"متوسط الربح / صفقة ({daily_trades} صفقات)": round(per_trade, 2),
             })
 
         df_full = pd.DataFrame(full_data)
@@ -582,8 +581,8 @@ with tab3:
 
         st.caption(
             "📌 القاعدة: الحد الأقصى للخسارة اليومية = ربح ذلك اليوم المستهدف. "
-            "بهذا لا تخاطر بأكثر مما ستكسبه — وفي أسوأ الأحوال يعود رأس مالك "
-            "إلى نفس رقم اليوم السابق (العمود الأخير)."
+            "في أسوأ الأحوال يعود رأس مالك لنفس رقم اليوم السابق. "
+            f"متوسط الربح / صفقة = الربح اليومي ÷ {daily_trades} صفقات."
         )
 
 # ── Footer ───────────────────────────────────────────────────────────────────
@@ -597,7 +596,7 @@ st.markdown(
     <div style="text-align: center; padding: 1.5rem 0 0.5rem; color: #7a8a9a; font-size: 0.88rem; line-height: 1.8;">
         تم برمجة هذه الصفحة من خلال <strong style="color: #00c9a7;">"عبد الرحمن الجابري"</strong> لأهداف تعليمية فقط
         <br>
-        جميع الحقوق محفوظة © 2026 — لا يُسمح بإعادة النشر أو الاستخدام التجاري دون إذن مسبق
+        جميع الحقوق محفوظة WMC Group LLC © 2026 — لا يُسمح بإعادة النشر أو الاستخدام التجاري دون إذن مسبق
     </div>
     """,
     unsafe_allow_html=True,
