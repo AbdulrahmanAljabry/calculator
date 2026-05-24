@@ -552,24 +552,24 @@ with tab3:
         # ── Full day-by-day table ─────────────────────────────────────────────
         st.markdown("### 📋 الخطة التفصيلية — يوماً بيوم")
 
-        # Max daily risk = risk_per_trade_pct × daily_trades (capped at 100%)
-        max_daily_risk_pct = min(risk_per_trade_pct * daily_trades, 100.0)
-
         full_data = []
         for d in range(0, trading_days + 1):
             cap        = capital_list[d]
             pct        = ((cap - initial_capital) / initial_capital) * 100
             daily_gain = daily_profits[d]
-            max_loss   = cap * (max_daily_risk_pct / 100)
-            # If max daily loss is hit → capital reverts to previous day
             prev_cap   = capital_list[d - 1] if d > 0 else cap
+
+            # الخسارة القصوى = ربح هذا اليوم فقط
+            # بمعنى: لا تخاطر بأكثر مما ستكسبه — أسوأ حالة تعود لرأس مال اليوم السابق
+            max_loss = daily_gain if d > 0 else 0.0
+
             full_data.append({
-                "اليوم":                    d,
-                "رأس المال ($)":            round(cap, 2),
-                "ربح اليوم ($)":            round(daily_gain, 2),
-                "نسبة النمو التراكمي %":    round(pct, 2),
-                "الخسارة القصوى اليومية ($)": round(max_loss, 2),
-                "رأس المال عند الخسارة ($)": round(prev_cap, 2),
+                "اليوم":                        d,
+                "رأس المال ($)":                round(cap, 2),
+                "ربح اليوم المستهدف ($)":       round(daily_gain, 2),
+                "نسبة النمو التراكمي %":        round(pct, 2),
+                "الحد الأقصى للخسارة اليومية ($)": round(max_loss, 2),
+                "رأس المال عند ضرب الحد ($)":   round(prev_cap, 2),
             })
 
         df_full = pd.DataFrame(full_data)
@@ -581,10 +581,9 @@ with tab3:
         )
 
         st.caption(
-            f"⚠️ الخسارة القصوى اليومية = {max_daily_risk_pct:.1f}% من رأس المال "
-            f"({daily_trades} صفقة × {risk_per_trade_pct:.2f}% لكل صفقة). "
-            "في حال الوصول إليها، يُوقف التداول لذلك اليوم ويُعتبر رأس المال "
-            "مساوياً لرأس مال اليوم السابق (العمود الأخير)."
+            "📌 القاعدة: الحد الأقصى للخسارة اليومية = ربح ذلك اليوم المستهدف. "
+            "بهذا لا تخاطر بأكثر مما ستكسبه — وفي أسوأ الأحوال يعود رأس مالك "
+            "إلى نفس رقم اليوم السابق (العمود الأخير)."
         )
 
 # ── Footer ───────────────────────────────────────────────────────────────────
