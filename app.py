@@ -68,37 +68,75 @@ with tab1:
         )
         is_long = direction.startswith("شراء")
 
+        instrument_rr = st.selectbox(
+            "نوع الأداة المالية",
+            [
+                "فوركس — زوج رئيسي (EUR/USD, GBP/USD ...)",
+                "فوركس — زوج الين الياباني (USD/JPY ...)",
+                "ذهب (XAU/USD)",
+                "فضة (XAG/USD)",
+                "مؤشرات (Indices)",
+                "عملات رقمية (Crypto)",
+                "أسهم (Stocks)",
+            ],
+            key="instrument_rr",
+        )
+
+        # Pip multiplier per instrument type
+        pip_multiplier_map = {
+            "فوركس — زوج رئيسي (EUR/USD, GBP/USD ...)":  10000,
+            "فوركس — زوج الين الياباني (USD/JPY ...)":    100,
+            "ذهب (XAU/USD)":                               10,
+            "فضة (XAG/USD)":                               100,
+            "مؤشرات (Indices)":                            1,
+            "عملات رقمية (Crypto)":                        1,
+            "أسهم (Stocks)":                               1,
+        }
+        pip_multiplier = pip_multiplier_map[instrument_rr]
+
+        # Default prices per instrument
+        price_defaults = {
+            "فوركس — زوج رئيسي (EUR/USD, GBP/USD ...)":  (1.1000, 0.00001),
+            "فوركس — زوج الين الياباني (USD/JPY ...)":    (150.000, 0.001),
+            "ذهب (XAU/USD)":                               (2300.0, 0.1),
+            "فضة (XAG/USD)":                               (28.00, 0.01),
+            "مؤشرات (Indices)":                            (5000.0, 1.0),
+            "عملات رقمية (Crypto)":                        (65000.0, 1.0),
+            "أسهم (Stocks)":                               (100.0, 0.01),
+        }
+        default_price, default_step = price_defaults[instrument_rr]
+
         entry_price = st.number_input(
             "سعر الدخول",
             min_value=0.0001,
-            value=1.1000,
-            step=0.0001,
-            format="%.5f",
+            value=default_price,
+            step=default_step,
+            format="%.4f" if pip_multiplier >= 1000 else "%.2f" if pip_multiplier >= 10 else "%.2f",
             help="السعر الذي ستدخل عنده الصفقة",
         )
         stop_loss = st.number_input(
             "وقف الخسارة (Stop Loss)",
             min_value=0.0001,
-            value=1.0950,
-            step=0.0001,
-            format="%.5f",
+            value=round(entry_price * (0.9955 if is_long else 1.0045), 4),
+            step=default_step,
+            format="%.4f" if pip_multiplier >= 1000 else "%.2f",
             help="السعر الذي ستغلق عنده الصفقة خسارةً",
         )
         take_profit = st.number_input(
             "جني الأرباح (Take Profit)",
             min_value=0.0001,
-            value=1.1100,
-            step=0.0001,
-            format="%.5f",
+            value=round(entry_price * (1.009 if is_long else 0.991), 4),
+            step=default_step,
+            format="%.4f" if pip_multiplier >= 1000 else "%.2f",
             help="السعر الذي ستغلق عنده الصفقة ربحاً",
         )
         pip_value_input = st.number_input(
-            "قيمة النقطة (Pip Value) — اختياري",
+            "قيمة النقطة (Pip Value) بالدولار — اختياري",
             min_value=0.0,
             value=10.0,
             step=0.01,
             format="%.2f",
-            help="قيمة كل نقطة بالعملة الأساسية (اتركها صفراً للتجاهل)",
+            help="قيمة كل نقطة واحدة بالدولار (اتركها صفراً للتجاهل)",
         )
 
     with col2:
@@ -123,13 +161,13 @@ with tab1:
 
         if not errors:
             # ── Calculations ─────────────────────────────────────────────────
-            risk_points  = abs(entry_price - stop_loss)
+            risk_points   = abs(entry_price - stop_loss)
             reward_points = abs(take_profit - entry_price)
-            rr_ratio     = reward_points / risk_points if risk_points > 0 else 0
+            rr_ratio      = reward_points / risk_points if risk_points > 0 else 0
 
-            # Convert to pips (multiply by 10000 for 4-decimal pairs, approximation)
-            risk_pips   = round(risk_points * 10000, 1)
-            reward_pips = round(reward_points * 10000, 1)
+            # Convert to pips using the correct multiplier per instrument
+            risk_pips   = round(risk_points * pip_multiplier, 1)
+            reward_pips = round(reward_points * pip_multiplier, 1)
 
             # Monetary value (if pip value provided)
             risk_money   = risk_pips * pip_value_input if pip_value_input > 0 else None
@@ -137,10 +175,10 @@ with tab1:
 
             # ── Display ──────────────────────────────────────────────────────
             c1, c2, c3 = st.columns(3)
-            c1.metric("نقاط المخاطرة", f"{risk_pips} pip")
-            c2.metric("نقاط الربح",     f"{reward_pips} pip")
+            c1.metric("نقاط المخاطرة", f"{risk_pips:g} نقطة")
+            c2.metric("نقاط الربح",    f"{reward_pips:g} نقطة")
             rr_color = "good" if rr_ratio >= 2 else ("warning" if rr_ratio >= 1 else "bad")
-            c3.metric("نسبة R:R",        f"1 : {rr_ratio:.2f}")
+            c3.metric("نسبة R:R",      f"1 : {rr_ratio:.2f}")
 
             if risk_money is not None:
                 m1, m2 = st.columns(2)
