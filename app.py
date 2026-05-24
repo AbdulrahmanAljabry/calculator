@@ -549,24 +549,28 @@ with tab3:
         fig3.update_yaxes(gridcolor="#1e2a3a", zerolinecolor="#1e2a3a")
         st.plotly_chart(fig3, use_container_width=True)
 
-        # ── Summary table (milestones) ────────────────────────────────────────
-        milestones = [
-            int(trading_days * p) for p in [0.10, 0.25, 0.50, 0.75, 1.0]
-        ]
-        milestone_data = []
-        for d in milestones:
-            if d < len(capital_list):
-                cap  = capital_list[d]
-                prft = cap - initial_capital
-                pct  = (prft / initial_capital) * 100
-                milestone_data.append({
-                    "اليوم":         d,
-                    "رأس المال ($)": f"${cap:,.2f}",
-                    "الربح ($)":     f"${prft:,.2f}",
-                    "نسبة النمو %":  f"{pct:.1f}%",
-                })
-        st.markdown("**محطات رئيسية في الخطة:**")
-        st.dataframe(pd.DataFrame(milestone_data), use_container_width=True, hide_index=True)
+        # ── Full day-by-day table ─────────────────────────────────────────────
+        st.markdown("### 📋 الخطة التفصيلية — يوماً بيوم")
+        full_data = []
+        for d in range(0, trading_days + 1):
+            cap        = capital_list[d]
+            prft       = cap - initial_capital
+            pct        = (prft / initial_capital) * 100
+            daily_gain = daily_profits[d]
+            full_data.append({
+                "اليوم":              d,
+                "رأس المال ($)":      round(cap, 2),
+                "الربح التراكمي ($)": round(prft, 2),
+                "نسبة النمو %":       round(pct, 2),
+                "ربح اليوم ($)":      round(daily_gain, 2),
+            })
+        df_full = pd.DataFrame(full_data)
+        st.dataframe(
+            df_full,
+            use_container_width=True,
+            hide_index=True,
+            height=min(600, (trading_days + 2) * 35 + 38),
+        )
 
 # ── Footer ───────────────────────────────────────────────────────────────────
 st.markdown("---")
