@@ -551,25 +551,40 @@ with tab3:
 
         # ── Full day-by-day table ─────────────────────────────────────────────
         st.markdown("### 📋 الخطة التفصيلية — يوماً بيوم")
+
+        # Max daily risk = risk_per_trade_pct × daily_trades (capped at 100%)
+        max_daily_risk_pct = min(risk_per_trade_pct * daily_trades, 100.0)
+
         full_data = []
         for d in range(0, trading_days + 1):
             cap        = capital_list[d]
-            prft       = cap - initial_capital
-            pct        = (prft / initial_capital) * 100
+            pct        = ((cap - initial_capital) / initial_capital) * 100
             daily_gain = daily_profits[d]
+            max_loss   = cap * (max_daily_risk_pct / 100)
+            # If max daily loss is hit → capital reverts to previous day
+            prev_cap   = capital_list[d - 1] if d > 0 else cap
             full_data.append({
-                "اليوم":              d,
-                "رأس المال ($)":      round(cap, 2),
-                "الربح التراكمي ($)": round(prft, 2),
-                "نسبة النمو %":       round(pct, 2),
-                "ربح اليوم ($)":      round(daily_gain, 2),
+                "اليوم":                    d,
+                "رأس المال ($)":            round(cap, 2),
+                "ربح اليوم ($)":            round(daily_gain, 2),
+                "نسبة النمو التراكمي %":    round(pct, 2),
+                "الخسارة القصوى اليومية ($)": round(max_loss, 2),
+                "رأس المال عند الخسارة ($)": round(prev_cap, 2),
             })
+
         df_full = pd.DataFrame(full_data)
         st.dataframe(
             df_full,
             use_container_width=True,
             hide_index=True,
             height=min(600, (trading_days + 2) * 35 + 38),
+        )
+
+        st.caption(
+            f"⚠️ الخسارة القصوى اليومية = {max_daily_risk_pct:.1f}% من رأس المال "
+            f"({daily_trades} صفقة × {risk_per_trade_pct:.2f}% لكل صفقة). "
+            "في حال الوصول إليها، يُوقف التداول لذلك اليوم ويُعتبر رأس المال "
+            "مساوياً لرأس مال اليوم السابق (العمود الأخير)."
         )
 
 # ── Footer ───────────────────────────────────────────────────────────────────
@@ -583,7 +598,7 @@ st.markdown(
     <div style="text-align: center; padding: 1.5rem 0 0.5rem; color: #7a8a9a; font-size: 0.88rem; line-height: 1.8;">
         تم برمجة هذه الصفحة من خلال <strong style="color: #00c9a7;">"عبد الرحمن الجابري"</strong> لأهداف تعليمية فقط
         <br>
-        جميع الحقوق محفوظة © 2025 — لا يُسمح بإعادة النشر أو الاستخدام التجاري دون إذن مسبق
+        جميع الحقوق محفوظة © 2026 — لا يُسمح بإعادة النشر أو الاستخدام التجاري دون إذن مسبق
     </div>
     """,
     unsafe_allow_html=True,
