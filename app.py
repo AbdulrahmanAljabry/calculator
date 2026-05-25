@@ -421,9 +421,9 @@ with tab3:
 
         initial_capital = st.number_input(
             "رأس المال الابتدائي ($)",
-            min_value=100.0,
+            min_value=50.0,
             value=5000.0,
-            step=100.0,
+            step=50.0,
             format="%.2f",
         )
         target_capital = st.number_input(
@@ -616,13 +616,13 @@ st.markdown(
         </a>
         <br>
         <span style="color:#7a8a9a; font-size:0.88rem;">
-            تم برمجة هذه الحاسبة من خلال
+            تم برمجة هذه الصفحة من خلال
             <strong style="color:#00c9a7;">"عبد الرحمن الجابري"</strong>
             لأهداف تعليمية فقط
         </span>
         <br>
         <span style="color:#7a8a9a; font-size:0.85rem;">
-            2026 © جميع الحقوق محفوظة WMC Group LLC 
+            جميع الحقوق محفوظة WMC Group LLC © 2026
              <br>
             <a href="{WEBSITE_URL}" target="_blank" style="color:#00c9a7; text-decoration:none;">
                 www.aljabry.net
